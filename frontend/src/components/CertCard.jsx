@@ -2,7 +2,7 @@ import React from 'react';
 
 import { tagType, thirdweb } from '../assets';
 
-const FundCard = ({ name, id, uni, image, adminName, handleClick }) => {
+const CertCard = ({ name, id, uni, image, adminName, handleClick }) => {
 
   return (
     <div className="sm:w-[288px] w-full rounded-[15px] bg-[#1c1c24] cursor-pointer" onClick={handleClick}>
@@ -23,11 +23,11 @@ const FundCard = ({ name, id, uni, image, adminName, handleClick }) => {
           <div className="w-[30px] h-[30px] rounded-full flex justify-center items-center bg-[#13131a]">
             <img src={thirdweb} alt="user" className="w-1/2 h-1/2 object-contain" />
           </div>
-          <p className="flex-1 font-epilogue font-normal text-[12px] text-[#808191] truncate">by <span className="text-[#b2b3bd]">{adminName}</span></p>
+          <p className="flex-1 font-epilogue font-normal text-[12px] text-[#808191] truncate">by <span className="ml-[4px] text-[14px] text-[#b2b3bd]">{adminName}</span></p>
         </div>
       </div>
     </div>
   )
 }
 
-export default FundCard
+export default CertCard

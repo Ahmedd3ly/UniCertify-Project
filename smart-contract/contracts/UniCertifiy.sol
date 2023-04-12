@@ -20,9 +20,8 @@ contract UniCertify {
         string email;
     }
     // Defines the certificate structure that contains the student id, student name,
-    // the student image, university, the certificate IPFS hash and the certificate admin (uploader).
+    // the student image, university, the certificate IPFS hash and the certificate creator.
     struct Certificate {
-        uint blockNumber;
         uint id;
         uint issueDate;
         string name;
@@ -31,6 +30,7 @@ contract UniCertify {
         string ipfsHash;
         string adminName;
         string adminEmail;
+        address creator;
     }
 
     // Mappings that associate the admins (University authorities) structure with their address,
@@ -128,7 +128,6 @@ contract UniCertify {
             "Certificate is already uploaded"
         );
         Certificate memory newCertificate = Certificate(
-            block.number,
             _id,
             _issueDate,
             _name,
@@ -136,7 +135,8 @@ contract UniCertify {
             _image,
             _ipfsHash,
             Admins[msg.sender].name,
-            Admins[msg.sender].email
+            Admins[msg.sender].email,
+            msg.sender
         );
         Certificates[countCertificates] = newCertificate;
         uploadedCertificates[_ipfsHash] = true;

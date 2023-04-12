@@ -73,7 +73,7 @@ const AddAdmin = () => {
 
         <FormField
           labelName="Admin Address"
-          placeholder="0x......"
+          placeholder="0x12345......"
           inputType="address"
           value={form.address}
           handleChange={(e) => handleFormFieldChange('address', e)}

@@ -1,14 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import FundCard from './FundCard.jsx';
+import CertCard from './CertCard.jsx';
 import { loader } from '../assets';
 
 const DisplayCertificates = ({ title, isLoading, certificates }) => {
   const navigate = useNavigate();
 
   const handleNavigate = (certificate) => {
-    navigate(`/certificate-details/${certificate.name}`, { state: certificate })
+    navigate(`/certificate-details/${certificate.hash}`, { state: certificate })
   }
 
   return (
@@ -26,7 +26,7 @@ const DisplayCertificates = ({ title, isLoading, certificates }) => {
           </p>
         )}
 
-        {!isLoading && certificates.length > 0 && certificates.map((certificate) => <FundCard
+        {!isLoading && certificates.length > 0 && certificates.map((certificate) => <CertCard
           key={certificate.id}
           {...certificate}
           handleClick={() => handleNavigate(certificate)}

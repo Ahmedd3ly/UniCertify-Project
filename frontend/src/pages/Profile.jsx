@@ -22,7 +22,7 @@ const Profile = () => {
 
   return (
     <DisplayCertificates
-      title="All Certificates"
+      title="My Certificates"
       isLoading={isLoading}
       certificates={certificates}
     />

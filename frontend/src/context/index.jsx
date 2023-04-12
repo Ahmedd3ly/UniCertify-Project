@@ -37,9 +37,8 @@ export const StateContextProvider = ({ children }) => {
 
   const createCertificate = async (form) => {
     try {
-      // Import the certificate file and add to the IPFS using addCertToIPFS function.
-      const certificate = new Blob([form.certificate], { type: 'text/plain' });
-      const ipfsHash = addCertToIPFS(certificate);
+      // Import the certificate buffer data and add to the IPFS using addCertToIPFS function.
+      const ipfsHash = addCertToIPFS(form.certificate);
 
       const call = await uploadCertificate({
         args: [
@@ -54,7 +53,6 @@ export const StateContextProvider = ({ children }) => {
 
       alert(form.name + ' certifiacate is uploaded successfully.')
       console.info('Contract call success', call)
-
     } catch (error) {
       alert('Contract call failure', error.message)
       console.info('Contract call failure', error)
@@ -80,15 +78,14 @@ export const StateContextProvider = ({ children }) => {
     const certificates = await contract.call('getCertificates');
 
     const parsedCertificates = certificates.map((certificate, i) => ({
-      name: certificate.name,
       id: certificate.id.toString(),
       uni: certificate.uni,
-      image: certificate.image,
+      name: certificate.name,
       hash: certificate.ipfsHash,
+      image: certificate.image,
+      issueDate: certificate.issueDate.toNumber(),
       adminName: certificate.adminName,
       adminEmail: certificate.adminEmail,
-      issueDate: certificate.issueDate.toNumber(),
-      blockNumber: certificate.blockNumber.toString(),
       pId: i
     }));
 
@@ -105,22 +102,39 @@ export const StateContextProvider = ({ children }) => {
 
   const checkCertificate = async (certificate) => {
     try {
-
-      const cert = new Blob([certificate], { type: 'text/plain' });
-      const ipfsHash = addCertToIPFS(cert);
-
+      const ipfsHash = addCertToIPFS(certificate);
       const isVerified = await contract.call('verifyCertificate', [ipfsHash]);
 
       if (isVerified) {
-
-        alert('Certificate is verified');
+        alert('Certificate is verified!');
       } else {
-        alert('Certificate is not verified');
+        alert('Certificate is NOT verified!');
       }
-
     } catch (error) {
-      alert('Certificate is not valid.', error.message)
+      alert('Contract call failure', error.message)
       console.info('Contract call failure', error)
+    }
+  }
+
+  const downloadCertificate = async (url, fileName) => {
+    try {
+      // Fetch the file from the URL
+      const response = await fetch(url);
+      const blob = await response.blob();
+  
+      // Create a download link and trigger a click event to download the file
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = fileName; // Set the desired file name
+      downloadLink.click();
+  
+      // Clean up the URL object
+      URL.revokeObjectURL(downloadLink.href);
+  
+      alert('Certificate downloaded successfully!');
+    } catch (error) {
+      alert('Failed to download Certificate', error.message);
+      console.error('Failed to download Certificate', error);
     }
   }
 
@@ -134,7 +148,8 @@ export const StateContextProvider = ({ children }) => {
         uploadCertificate: createCertificate,
         getCertificates,
         getUserCertificates,
-        checkCertificate
+        checkCertificate,
+        downloadCertificate
       }}
     >
       {children}

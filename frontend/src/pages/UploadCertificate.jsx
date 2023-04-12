@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { ethers } from 'ethers';
 
 import { useStateContext } from '../context';
 import { CustomButton, FormField, Loader } from '../components';
@@ -9,6 +8,7 @@ import { checkIfImage } from '../utils';
 const UploadCertificate = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [buffer, setBuffer] = useState([])
   const { uploadCertificate } = useStateContext();
   const [form, setForm] = useState({
     name: '',
@@ -16,11 +16,23 @@ const UploadCertificate = () => {
     university: '',
     issueDate: '',
     image: '',
-    certificate: ''
+    certificate: null
   });
 
   const handleFormFieldChange = (fieldName, e) => {
-    setForm({ ...form, [fieldName]: e.target.value })
+    if (fieldName === 'certificate') {
+      // Handle file upload
+      const file = e.target.files[0];
+      const reader = new window.FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onloadend = () => {
+        const fileBuffer = Buffer.from(reader.result);
+        setBuffer(fileBuffer);
+      };
+    } else {
+      // Handle other form fields
+      setForm({ ...form, [fieldName]: e.target.value });
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -29,7 +41,7 @@ const UploadCertificate = () => {
     checkIfImage(form.image, async (exists) => {
       if (exists) {
         setIsLoading(true)
-        await uploadCertificate({ ...form })
+        await uploadCertificate({ ...form, certificate: buffer })
         setIsLoading(false);
         navigate('/');
       } else {
@@ -91,9 +103,7 @@ const UploadCertificate = () => {
 
         <FormField
           labelName="Student Certificate *"
-          placeholder="Upload the student's certificate"
           inputType="file"
-          value={form.certificate}
           handleChange={(e) => handleFormFieldChange('certificate', e)}
         />
 

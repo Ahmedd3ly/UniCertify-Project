@@ -87,13 +87,13 @@ const Navbar = () => {
             ))}
           </ul>
 
-          <div className="flex mx-4">
+          <div className="flex mx-4 gap-4">
             <CustomButton
               btnType="button"
-              title='Add Admin'
-              styles='bg-[#8c6dfd]'
+              title={address ? 'Assign an Admin' : ''}
+              styles={address ? 'bg-[#1B99D4]' : ''}
               handleClick={() => {
-                navigate('add-admin');
+                if (address) navigate('add-admin');
               }}
             />
 
