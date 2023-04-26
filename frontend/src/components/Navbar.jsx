@@ -87,7 +87,7 @@ const Navbar = () => {
             ))}
           </ul>
 
-          <div className="flex mx-4 gap-4">
+          <div className="flex mx-4 gap-4 justify-center">
             <CustomButton
               btnType="button"
               title={address ? 'Assign an Admin' : ''}

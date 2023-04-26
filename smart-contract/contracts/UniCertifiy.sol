@@ -52,12 +52,6 @@ contract UniCertify {
         _;
     }
 
-    // Modifier that checks if the address is valid (i.e address != 0).
-    modifier validAddress(address _address) {
-        require(_address != address(0), "Invalid address");
-        _;
-    }
-
     // Modifier that checks if the caller is an authorized admin (i.e same university as the student).
     modifier authorisedAdmin(string calldata _uni) {
         require(
@@ -69,9 +63,9 @@ contract UniCertify {
     }
 
     // Modifier that checks if the caller is an assigned admin to upload certificates.
-    modifier assignedAdmin(address _address) {
+    modifier assignedAdmin() {
         require(
-            Admins[_address].blockNumber != 0,
+            Admins[msg.sender].blockNumber != 0,
             "Caller is not assigned to upload certificates"
         );
         _;
@@ -101,18 +95,7 @@ contract UniCertify {
         Admins[_address].email = _email;
         ++countAdmins;
     }
-
-    // Deletes the admin with the given address. This function can only be called by the owner of the contract.
-    function deleteAdmin(
-        address _address
-    ) public onlyOwner assignedAdmin(_address) {
-        Admins[_address].blockNumber = 0;
-        Admins[_address].name = "";
-        Admins[_address].uni = "";
-        Admins[_address].email = "";
-        --countAdmins;
-    }
-
+    
     // Uploads a new certificate with the given IPFS hash and links it to the student information.
     // This function can only be called by an authorized admin and can only be called once per document hash.
     function uploadCertificate(
@@ -122,7 +105,7 @@ contract UniCertify {
         string calldata _uni,
         string calldata _image,
         string calldata _ipfsHash
-    ) public authorisedAdmin(_uni) assignedAdmin(msg.sender) {
+    ) public authorisedAdmin(_uni) assignedAdmin() {
         require(
             !uploadedCertificates[_ipfsHash],
             "Certificate is already uploaded"

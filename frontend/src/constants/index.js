@@ -1,6 +1,6 @@
-import { uploadCertificate, dashboard, logout, payment, profile, withdraw } from '../assets';
+import { dashboard, certificate, admin, withdraw, profile, logout } from '../assets';
 
-export const CONTRACT_ADDRESS = "0x354CC584C1a50AfDd476f176cfA4c7a427a22d29";
+export const CONTRACT_ADDRESS = "0xb76E8420691AE0Cd250D52dc346C0904C9c7E873";
 
 export const navlinks = [
   {
@@ -10,19 +10,13 @@ export const navlinks = [
   },
   {
     name: 'certificate',
-    imgUrl: uploadCertificate,
+    imgUrl: certificate,
     link: '/upload-certificate',
   },
   {
     name: 'admin',
-    imgUrl: uploadCertificate,
+    imgUrl: admin,
     link: '/add-admin',
-  },
-  {
-    name: 'payment',
-    imgUrl: payment,
-    link: '/',
-    disabled: true,
   },
   {
     name: 'withdraw',
